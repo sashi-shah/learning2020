@@ -3,7 +3,8 @@ with stg_payment as (
           orderid as order_id,
           paymentmethod,
          status,
+         created::timestamp as created,
         amount/100 as amount
-        from raw.stripe.payment
+        from {{source('stripe','payment')}}
  )
  select * from stg_payment
