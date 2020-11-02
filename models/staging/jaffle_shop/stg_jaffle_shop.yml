@@ -1,0 +1,47 @@
+version: 2
+
+models:
+
+    - name: stg_customers
+      description: Staged customer data from our jaffle shop app.
+      columns: 
+        - name: customer_id
+          tests:
+            - unique
+            - not_null
+
+        - name: last_name
+          tests: 
+            - not_null
+
+    - name: stg_orders
+      description: Staged order data from our jaffle shop app.
+      columns: 
+        - name: status
+          description: "{{doc('order_status')}}"
+          tests:
+            - accepted_values:
+                values:
+                  - completed
+                  - placed
+                  - returned
+                  - return_pending
+                  - shipped  
+
+        - name: customer_id
+          description: Referential integrity test for customer_id in the customer table
+          tests:
+            - relationships:
+                to: ref('stg_customers')
+                field: customer_id
+
+        - name: order_id
+          description: Unique order id in the orders table
+          tests:
+            - unique
+            - not_null
+ 
+
+
+
+                

@@ -1,0 +1,29 @@
+version: 2
+
+models:
+
+    - name: stg_payments
+      description: Payment details for the orders
+      columns: 
+        - name: paymentmethod
+          description:  "{{doc('payment_method')}}"
+          tests:
+            - accepted_values:
+                values: 
+                  - bank_transfer
+                  - coupon
+                  - credit_card
+                  - gift_card
+
+        - name: status
+          tests:
+            - accepted_values:
+                values: 
+                  - success
+                  - fail
+
+        - name: order_id
+          tests:
+            - relationships:
+                to: ref('stg_orders')
+                field: order_id

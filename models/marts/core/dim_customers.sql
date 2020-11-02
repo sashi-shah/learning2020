@@ -5,11 +5,16 @@ orders as (
     select * from {{ ref('stg_orders')}}
 ),
 
+payments as (
+    select * from {{ ref('stg_payments') }}
+),
+
 orderval as (
  	select 
     distinct order_id as order_id,
     amount as amount 
-    from {{ ref('stg_payments') }}
+    from payments
+    
  ),
 
 customer_orders as (
@@ -26,7 +31,8 @@ final as (
         customers.customer_id,
         customers.first_name,
         customers.last_name, 
-        sum(customer_orders.amount ) amount
+        count(customer_orders.order_id),
+        sum(customer_orders.amount ) amount 
     from customers
     left join customer_orders using (customer_id)
     group by customers.customer_id,
